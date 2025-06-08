@@ -1,25 +1,5 @@
 {
   "holdings": [
-    {
-      "metal": "silver",
-      "weight": 2,
-      "quantity": 1,
-      "buyPrice": 0,
-      "design": "Kraken"
-    },
-    {
-      "metal": "silver",
-      "weight": 1,
-      "quantity": 1,
-      "buyPrice": 33,
-      "design": "American Eagle"
-    },
-    {
-      "metal": "silver",
-      "weight": 1,
-      "quantity": 1,
-      "buyPrice": 33,
-      "design": "American Eagle"
-    }
+
   ]
 }
