@@ -19,19 +19,6 @@
    git clone https://github.com/yourusername/metal-wallet.git
    cd metal-wallet
 
-.
-├── main.js             # Electron main process
-├── index.html          # Main UI
-├── renderer.js         # App logic (wallet, price fetch, UI rendering)
-├── data/
-│   ├── wallet.json     # Local wallet data
-│   └── spotPrices.json # Cached spot prices
-├── public/             # Assets like icons and CSS
-├── .gitignore
-├── package.json
-└── README.md
-
-
-## npm install
-
-## npm start 
+## How To start in the command line run: 
+    npm install 
+    npm start 
