@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css">
+  <title>My Metal Wallet</title>
+</head>
+<body>
+  <h1>🪙 My Metal Wallet
+    <span id="portfolioValue" style="font-weight: normal; font-size: 1rem; margin-left: 1rem; color: #555;">
+      (Total: $0.00)
+    </span>
+  </h1>
+  <div id="spotPrices">
+    <span id="goldSpot">Gold: loading...</span> | 
+    <span id="silverSpot">Silver: loading...</span> |
+    <span id="copperSpot">Copper: loading...</span>
+    <div id="lastUpdated" style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"></div>
+  </div>
+
+  <button id="toggleFormBtn">NEW COIN</button>
+  <div id="formWrapper" class="form-wrapper">
+    <form id="entryForm">
+      <div class="inline-group">
+        <label for="metal">Metal:</label>
+        <select id="metal">
+          <option></option>
+          <option value="silver">Silver</option>
+          <option value="gold">Gold</option>
+          <option value="copper">Copper</option>
+        </select>
+  
+        <label for="weightSelect">Weight:</label>
+        <select id="weightSelect">
+          <option value="0.1">1/10 oz</option>
+          <option value="0.25">1/4 oz</option>
+          <option value="0.33">1/3 oz</option>
+          <option value="0.5">1/2 oz</option>
+          <option value="1" selected>1 oz</option>
+          <option value="2">2 oz</option>
+        </select>
+      </div>
+    
+      <div class="inline-group">
+        <label for="design">Design:</label>
+        <input type="text" id="design" list="designs">
+        <datalist id="designs"></datalist>
+  
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" min="1" value="1" required>
+      
+        <label for="buyPrice">Cost:</label>
+        <input type="number" id="buyPrice" step="0.01" min="0" required>
+      </div>
+  
+      <button id="submitBtn" type="submit" disabled>Add to Wallet</button>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Metal</th>
+        <th>Design</th>
+        <th>Ounces</th>
+        <th>Avg Buy Price</th>
+        <th>Spot Price</th>
+        <th>Gain/Loss</th>
+        <th>Total Value</th>
+      </tr>
+    </thead>
+    <tbody id="walletTable"></tbody>
+  </table>
+
+  <script src="script.js"></script>
+</body>
+</html>

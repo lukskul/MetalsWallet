@@ -1,0 +1,168 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 2rem;
+  background: #f7f7f7;
+}
+
+h1 {
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #ffffff;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-row > div {
+  flex: 1;
+  min-width: 160px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+input,
+select,
+button {
+  width: 90%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  transition: border-color 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: lightblue;
+  outline: none;
+  background-color: #fff;
+}
+
+button {
+  width: auto; 
+  background-color: grey;
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: green;
+}
+
+#submitBtn {
+  width: auto; 
+  background-color: #ccc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+#submitBtn:enabled {
+  background-color: #4CAF50;
+}
+
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background-color: lightblue;
+  border: 1px solid lightcoral;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+  white-space: nowrap;
+  border-radius: 3px; 
+  border: solid 1px silver
+}
+
+th {
+  background-color: #f7f7f7;
+  font-weight: 600;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+tr:hover {
+  background-color: #f0f4f8;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+td.gain {
+  color: green;
+  font-weight: bold;
+}
+
+td.loss {
+  color: red;
+  font-weight: bold;
+}
+
+.inline-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.inline-group label {
+  margin-right: 0.5rem;
+}
+
+.inline-group input,
+.inline-group select {
+  flex: 1;
+  min-width: 100px;
+}
+
+.form-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.form-wrapper.open {
+  max-height: 500px; /* adjust based on form height */
+}
+
