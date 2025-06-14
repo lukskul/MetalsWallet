@@ -1,6 +1,7 @@
+// wallet_ui.js
 const API_KEY = "goldapi-pv9smbmkqkxq-io";
 
-// Fetch spot prices for metals from API or fallback cache
+// Fetch spot prices
 async function fetchSpotPrices() {
   const headers = {
     "x-access-token": API_KEY,
@@ -30,7 +31,6 @@ async function fetchSpotPrices() {
 
     localStorage.setItem('spotPrices', JSON.stringify(prices));
 
-    // Optional backend caching
     await fetch('/api/spot-prices', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -40,22 +40,14 @@ async function fetchSpotPrices() {
     return prices;
   } catch (error) {
     console.warn('⚠️ Spot price fetch failed. Falling back to local data.');
-    console.debug(error.message);
-
     const cached = localStorage.getItem('spotPrices');
     if (cached) return JSON.parse(cached);
 
     try {
       const res = await fetch('/api/spot-prices');
-      if (res.ok) {
-        const data = await res.json();
-        return data;
-      }
-    } catch (fallbackErr) {
-      console.debug('Fallback from server also failed:', fallbackErr.message);
-    }
+      if (res.ok) return await res.json();
+    } catch {}
 
-    // Default fallback prices
     return {
       gold: 0,
       silver: 0,
@@ -65,20 +57,16 @@ async function fetchSpotPrices() {
   }
 }
 
-// Fetch wallet holdings array from backend
 async function fetchHoldings() {
   const res = await fetch('/api/wallet');
   const wallet = await res.json();
   return wallet.holdings || [];
 }
 
-// Group holdings by metal + design, summing ounces and weighted avg buy price
 function groupHoldings(holdings) {
   const grouped = {};
-
   holdings.forEach(item => {
     const key = `${item.metal}|${item.design || ''}`;
-
     if (!grouped[key]) {
       grouped[key] = {
         metal: item.metal,
@@ -91,47 +79,65 @@ function groupHoldings(holdings) {
       grouped[key].totalBuy += item.buyPrice * item.weight * item.quantity;
     }
   });
-
-  // Calculate average buy price per ounce
   Object.values(grouped).forEach(entry => {
     entry.buyPrice = entry.totalBuy / entry.ounces;
   });
-
   return Object.values(grouped);
 }
 
-// Render the wallet table and design datalist
-async function renderWallet(spotPrices, holdings) {
+let currentFilter = null;
+
+async function renderWallet(spotPrices, holdings, filterMetal = null) {
   const grouped = groupHoldings(holdings);
   const table = document.getElementById('walletTable');
   table.innerHTML = '';
 
-  // Populate datalist with unique design names
   const uniqueDesigns = [...new Set(holdings.map(h => h.design).filter(Boolean))];
   const datalist = document.getElementById('designs');
   datalist.innerHTML = uniqueDesigns.map(d => `<option value="${d}">`).join('');
 
-  grouped.forEach(item => {
-    const spot = spotPrices[item.metal] || 0;
-    const value = (item.ounces * spot).toFixed(2);
-    const cost = (item.ounces * item.buyPrice).toFixed(2);
-    const gainLoss = (value - cost).toFixed(2);
+  let totalValue = 0;
 
-    const row = `
-      <tr>
-        <td>${item.metal}</td>
-        <td>${item.design || '-'}</td>
-        <td>${item.ounces}</td>
-        <td>$${item.buyPrice.toFixed(2)}</td>
-        <td>$${spot.toFixed(2)}</td>
-        <td style="color:${gainLoss >= 0 ? 'lightgreen' : 'lightblue'}">$${gainLoss}</td>
-        <td style="color:green">$${value}</td>
-      </tr>`;
-    table.insertAdjacentHTML('beforeend', row);
+  grouped.forEach(item => {
+    if (filterMetal && item.metal !== filterMetal) return;
+
+    const spot = spotPrices[item.metal] || 0;
+    const value = item.ounces * spot;
+    const cost = item.ounces * item.buyPrice;
+    const gainLoss = value - cost;
+
+    totalValue += value;
+
+    const row = document.createElement('tr');
+    row.setAttribute('data-metal', item.metal);
+
+    row.innerHTML = `
+      <td class="metal-cell" style="cursor:pointer">${item.metal}</td>
+      <td>${item.design || '-'}</td>
+      <td>${item.ounces}</td>
+      <td>$${item.buyPrice.toFixed(2)}</td>
+      <td>$${spot.toFixed(2)}</td>
+      <td style="color:${gainLoss >= 0 ? 'lightgreen' : 'lightblue'}">$${gainLoss.toFixed(2)}</td>
+      <td style="color:green">$${value.toFixed(2)}</td>
+    `;
+
+    table.appendChild(row);
+
+    const metalCell = row.querySelector('.metal-cell');
+    metalCell.addEventListener('click', () => {
+      if (currentFilter === item.metal) {
+        currentFilter = null;
+        renderWallet(spotPrices, holdings, null);
+      } else {
+        currentFilter = item.metal;
+        renderWallet(spotPrices, holdings, item.metal);
+      }
+    });
   });
+
+  document.getElementById('portfolioValue').textContent = `(Total: $${totalValue.toFixed(2)})`;
 }
 
-// Update the whole UI — spot prices, portfolio, wallet table
 async function updateUI() {
   const spotPrices = await fetchSpotPrices();
   const holdings = await fetchHoldings();
@@ -140,15 +146,7 @@ async function updateUI() {
   document.getElementById('silverSpot').textContent = `Silver: $${spotPrices.silver.toFixed(2)}`;
   document.getElementById('copperSpot').textContent = `Copper: $${spotPrices.copper.toFixed(2)}`;
 
-  await renderWallet(spotPrices, holdings);
-
-  let totalValue = 0;
-  holdings.forEach(item => {
-    const spot = spotPrices[item.metal] || 0;
-    totalValue += item.weight * item.quantity * spot;
-  });
-
-  document.getElementById('portfolioValue').textContent = `(Total: $${totalValue.toFixed(2)})`;
+  await renderWallet(spotPrices, holdings, currentFilter);
 
   if (spotPrices.lastUpdated) {
     const date = new Date(spotPrices.lastUpdated);

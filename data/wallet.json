@@ -1,5 +1,46 @@
 {
   "holdings": [
-
+    {
+      "metal": "silver",
+      "weight": 1,
+      "quantity": 1,
+      "buyPrice": 41,
+      "design": "American Eagle"
+    },
+    {
+      "metal": "gold",
+      "weight": 1,
+      "quantity": 1,
+      "buyPrice": 3300,
+      "design": "American Eagle"
+    },
+    {
+      "metal": "copper",
+      "weight": 1,
+      "quantity": 1,
+      "buyPrice": 2,
+      "design": "American Eagle"
+    },
+    {
+      "metal": "silver",
+      "weight": 1,
+      "quantity": 1,
+      "buyPrice": 41,
+      "design": "American Eagle"
+    },
+    {
+      "metal": "silver",
+      "weight": 1,
+      "quantity": 1,
+      "buyPrice": 41,
+      "design": "American Eagle"
+    },
+    {
+      "metal": "silver",
+      "weight": 2,
+      "quantity": 1,
+      "buyPrice": 81,
+      "design": "Kraken"
+    }
   ]
 }
