@@ -6,9 +6,9 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    icon: path.join(__dirname, 'public', 'icon.png'),
+    width: 800,
+    height: 600,
+    icon: path.join(__dirname, 'public', 'coin.png'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
